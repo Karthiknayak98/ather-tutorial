@@ -57,7 +57,7 @@ module.exports.datastores = {
     host: 'localhost',
     port: '5432',
     user: 'postgres',
-    password: 'Intel@567',
+    password: '',
     database: 'tutorial',
   },
 };
