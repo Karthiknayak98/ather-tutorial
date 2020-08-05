@@ -10,64 +10,79 @@
 module.exports = {
 
     addTutorial:async function(req,res){
-        const title = req.body.title
-        const content = req.body.content
-        console.log(title +' '+content)
-        /* works */
-        // var createdRecord = await sails.models.tutorial.create({
-        //     title: title,
-        //     content: content
-        //   }).fetch();
-
-        var createdRecord = await Tutorial.create(req.body).fetch();     
-        res.json(createdRecord)
+        var createdRecord = await Tutorial.create(req.body).fetch();
+        res.status(201).json(createdRecord)
     },
     updateTutorial:async function(req,res){
         try{
             var updatedRecord = await Tutorial.updateOne({title:req.body.title,id:req.body.id}).set({content:req.body.content});
             if(!updatedRecord){
-                return res.status(400).send('Record not found')
+                return res.status(404).json({error:'Record not found'})
             }
-            //console.log(updatedRecord)
-            res.send(updatedRecord)
+            res.json(updatedRecord)
         }catch(err){
-            console.log(err)
-            res.status(400).json(err)
+            res.status(500).json(err)
         }
     },
     deleteOneTutorial: async function(req,res){
         try{
             var deleted = await Tutorial.destroy({id:req.params.id}).fetch();
             if(!deleted){
-                res.send('Not found')
+                return res.status(404).json({error:'Record Not found'})
             }
             res.send(deleted)
         }catch(e){
-            console.log(e)
-            res.status(400).json(e)
+            res.status(500).json(e)
         }
     },
     deleteAll: async function(req,res){
         try{
             var deleted = await Tutorial.destroy({}).fetch();
             if(!deleted){
-                res.send('Not found')
+                return res.status(404).json({error:'Not found'})
             }
             res.send(deleted)
         }catch(e){
-            res.status(400).send()
+            res.status(500).send(e)
         }
     },
     viewTutorials: async function(req,res){
         var page = 1
-        if(req.query.page)
+        var limit =5
+        if(req.query.page){
             page = req.query.page
-        var data = await Tutorial.find({
-            where:{title:req.query.title},
-            skip: (page-1)*5,
-            limit: 5
-          });
-        res.json(data)
+        }
+        if(req.query.limit)
+            limit = req.query.limit
+        try{
+            var data = await Tutorial.find({
+                where:{title:req.params.title},
+                skip: (page-1)*5,
+                limit: limit
+            });
+            res.json(data)
+        }catch(e){
+            res.status(500).send(e)
+        }
+    },
+    viewAllTutorials: async function(req,res){
+        var page = 1
+        var limit = 5
+        if(req.query.page){
+            page = req.query.page
+        }
+        if(req.query.limit)
+            limit = req.query.limit
+        try{
+            var data = await Tutorial.find({
+                where:{title:req.query.title},
+                skip: (page-1)*5,
+                limit: limit
+            });
+            res.json(data)
+        }catch(e){
+            res.status(500).send(e)
+        }
     }
 };
 

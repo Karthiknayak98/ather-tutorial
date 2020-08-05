@@ -29,16 +29,17 @@ module.exports.http = {
     *                                                                          *
     ***************************************************************************/
 
-    // order: [
-    //   'cookieParser',
-    //   'session',
-    //   'bodyParser',
-    //   'compress',
-    //   'poweredBy',
-    //   'router',
-    //   'www',
-    //   'favicon',
-    // ],
+    order: [
+      'details',
+      'cookieParser',
+      'session',
+      'bodyParser',
+      'compress',
+      'poweredBy',
+      'router',
+      'www',
+      'favicon',
+    ],
 
 
     /***************************************************************************
@@ -49,12 +50,25 @@ module.exports.http = {
     *                                                                          *
     ***************************************************************************/
 
-    // bodyParser: (function _configureBodyParser(){
-    //   var skipper = require('skipper');
-    //   var middlewareFn = skipper({ strict: true });
-    //   return middlewareFn;
-    // })(),
-
+    bodyParser: (function _configureBodyParser(){
+      var skipper = require('skipper');
+      var middlewareFn = skipper({ strict: true });
+      return middlewareFn;
+    })(),
+    details: (function (){
+      console.log('Initializing `foobar` (HTTP middleware)...');
+      return function (req,res,next) {
+        console.log('Received HTTP request: '+req.method+' '+req.path);
+        // if(req.body)
+          //console.log(req.body.title)
+        // if(!Object.keys(req.params).length === 0)
+          console.log('Req Params ' +req.params)
+        // if(!Object.keys(req.query).length === 0)
+          console.log('Req Querys '+req.query)
+        console.log('Req start time '+req._startTime)
+        return next();
+      };
+    })(),
   },
 
 };

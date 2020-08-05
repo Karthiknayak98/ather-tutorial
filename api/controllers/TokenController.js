@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken')
 module.exports = {
     generateToken: async function(req,res){
         const token = jwt.sign({},'JWTTOKEN',{expiresIn:'5m'})
-        console.log(token)
-        res.send({token})
+        res.json({token})
     }
 };
 

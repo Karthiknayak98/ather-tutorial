@@ -25,8 +25,8 @@ module.exports.routes = {
   'PUT /tutorials': 'TutorialController.updateTutorial',
   'DELETE /tutorials/:id': 'TutorialController.deleteOneTutorial',
   'DELETE /tutorials/': 'TutorialController.deleteAll',
-  'GET /tutorials': 'TutorialController.viewTutorials',
-  //'GET /tutorials': 'TutorialController.viewAllTutorials',
+  'GET /tutorials/:title': 'TutorialController.viewTutorials',
+  'GET /tutorials': 'TutorialController.viewAllTutorials',
 
 
   'GET /generate': 'TokenController.generateToken',
