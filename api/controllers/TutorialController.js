@@ -11,10 +11,12 @@ module.exports = {
 
     addTutorial:async function(req,res){
         try{
+            if(!req.body.title)
+                return res.status(400).json({error:'Title is required'})
             var createdRecord = await Tutorial.create(req.body).fetch();
             res.status(201).json(createdRecord)
         }catch(e){
-            res.status(500).json({error})
+            res.status(500).json({e})
         }
     },
     updateTutorial:async function(req,res){
@@ -52,8 +54,8 @@ module.exports = {
     },
     viewOneTutorial: async function(req,res){
         try{
-            var data = await Tutorial.find({id:req.params.id});
-            if(data.length===0)
+            var data = await Tutorial.findOne({id:req.params.id});
+            if(!data)
                 return res.status(404).json({error:'Record not found'})
             res.json(data)
         }catch(e){
