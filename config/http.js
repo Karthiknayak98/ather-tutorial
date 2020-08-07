@@ -60,11 +60,11 @@ module.exports.http = {
       return function (req,res,next) {
         console.log('Received HTTP request: '+req.method+' '+req.path);
         // if(req.body)
-          //console.log(req.body.title)
-        // if(!Object.keys(req.params).length === 0)
-          console.log('Req Params ' +req.params)
-        // if(!Object.keys(req.query).length === 0)
-          console.log('Req Querys '+req.query)
+        //   console.log(req.body)
+        // if(Object.keys(req.params).length != 0)
+        //   console.log('Req Params ', req.params)
+        if(Object.keys(req.query).length != 0)
+          console.log('Req Querys ', req.query)
         console.log('Req start time '+req._startTime)
         return next();
       };

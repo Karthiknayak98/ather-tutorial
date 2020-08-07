@@ -10,8 +10,12 @@
 module.exports = {
 
     addTutorial:async function(req,res){
-        var createdRecord = await Tutorial.create(req.body).fetch();
-        res.status(201).json(createdRecord)
+        try{
+            var createdRecord = await Tutorial.create(req.body).fetch();
+            res.status(201).json(createdRecord)
+        }catch(e){
+            res.status(500).json({error})
+        }
     },
     updateTutorial:async function(req,res){
         try{
@@ -39,27 +43,18 @@ module.exports = {
         try{
             var deleted = await Tutorial.destroy({}).fetch();
             if(!deleted){
-                return res.status(404).json({error:'Not found'})
+                return res.status(404).json({error:'Record Not found'})
             }
             res.send(deleted)
         }catch(e){
             res.status(500).send(e)
         }
     },
-    viewTutorials: async function(req,res){
-        var page = 1
-        var limit =5
-        if(req.query.page){
-            page = req.query.page
-        }
-        if(req.query.limit)
-            limit = req.query.limit
+    viewOneTutorial: async function(req,res){
         try{
-            var data = await Tutorial.find({
-                where:{title:req.params.title},
-                skip: (page-1)*5,
-                limit: limit
-            });
+            var data = await Tutorial.find({id:req.params.id});
+            if(data.length===0)
+                return res.status(404).json({error:'Record not found'})
             res.json(data)
         }catch(e){
             res.status(500).send(e)
@@ -67,16 +62,20 @@ module.exports = {
     },
     viewAllTutorials: async function(req,res){
         var page = 1
-        var limit = 5
+        var limit = 100
+        var title = req.query.title
         if(req.query.page){
             page = req.query.page
         }
-        if(req.query.limit)
+        if(req.query.limit){
             limit = req.query.limit
+        }
+        if(!req.query.title)
+            title = ''
         try{
             var data = await Tutorial.find({
-                where:{title:req.query.title},
-                skip: (page-1)*5,
+                where:{title:{contains:title}},
+                skip: (page-1)*limit,
                 limit: limit
             });
             res.json(data)
